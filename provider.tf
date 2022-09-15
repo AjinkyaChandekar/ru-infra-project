@@ -12,12 +12,12 @@ terraform {
 # Configure the AWS Provider
 provider "aws" {
   region = "us-east-1"
-  default_tags {
-    tags = {
-      app       = "ureport"
-      msp       = "lti"
-      terraform = true
-    }
-  }
+  # default_tags {
+  #   tags = {
+  #     app       = "ureport"
+  #     msp       = "lti"
+  #     terraform = true
+  #   }
+  # }
 }
 
