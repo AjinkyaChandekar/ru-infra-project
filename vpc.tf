@@ -3,9 +3,9 @@
 resource "aws_vpc" "main" {
   cidr_block       = "10.5.0.0/16"
   instance_tenancy = "default"
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "ureport-main-vpc"
-  }
+  })
 }
 
 #Create VPC Internet Gateway
@@ -13,9 +13,9 @@ resource "aws_vpc" "main" {
 resource "aws_internet_gateway" "main" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "ureport-main-internet-gw"
-  }
+  })
 }
 
 # Create Private Subnet
@@ -25,9 +25,9 @@ resource "aws_subnet" "private1" {
   availability_zone = "us-east-1a"
   cidr_block        = "10.5.1.0/24"
 
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "private1-subnet"
-  }
+  })
 }
 
 #Create Private Route Table
@@ -35,9 +35,9 @@ resource "aws_subnet" "private1" {
 resource "aws_route_table" "private1" {
   vpc_id = aws_vpc.main.id
 
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "private1-RT"
-  }
+  })
 }
 
 #Association between a Route Table and a Subnet
@@ -54,9 +54,9 @@ resource "aws_subnet" "public1" {
   availability_zone = "us-east-1a"
   cidr_block        = "10.5.3.0/24"
 
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "public1-subnet"
-  }
+  })
 }
 
 #Create Public Route Table
@@ -69,9 +69,9 @@ resource "aws_route_table" "public1" {
     gateway_id = aws_internet_gateway.main.id
   }
 
-  tags = {
+  tags = merge(module.tags.common_tags, {
     Name = "public1-RT"
-  }
+  })
 }
 
 #Association between a Route Table and a Subnet

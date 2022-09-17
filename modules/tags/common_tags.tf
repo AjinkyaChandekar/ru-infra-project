@@ -3,7 +3,6 @@ locals {
     app       = "ureport"
     msp       = "lti"
     terraform = true
-    new       = "tags"
   }
 }
 

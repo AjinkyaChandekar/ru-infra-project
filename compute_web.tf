@@ -14,7 +14,7 @@ module "ec2_instance_web" {
   rbd_type          = each.value["rbd_type"]
 
   ec2_tags = merge(module.tags.common_tags, {
-    Name = each.key
-    module =  "test"
+    Name   = each.key
+    Backup = "local-default"
   })
 }

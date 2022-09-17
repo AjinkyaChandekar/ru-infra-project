@@ -11,5 +11,8 @@ resource "aws_security_group" "sg_web" {
     ipv6_cidr_blocks = ["::/0"]
   }
 
-  tags = module.tags.common_tags
+  tags = merge(module.tags.common_tags, {
+    Name = "ureport-sg-web"
+
+  })
 }
