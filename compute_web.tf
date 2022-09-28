@@ -12,6 +12,7 @@ module "ec2_instance_web" {
   sg_ids            = [aws_security_group.sg_web.id]
   rbd_size          = each.value["rbd_size"]
   rbd_type          = each.value["rbd_type"]
+  iam_instance_profile = "SSMInstanceProfile"
 
   ec2_tags = merge(module.tags.common_tags, {
     Name   = each.key

@@ -13,7 +13,7 @@ resource "aws_backup_plan" "prod" {
   rule {
     rule_name         = "ureport-prd-backup-plan-rule-ec2"
     target_vault_name = aws_backup_vault.prod.name
-    schedule          = "cron(50 22 ? * * *)"
+    schedule          = "cron(00 20 ? * * *)"
     start_window      = 60
     completion_window = 180
 
@@ -38,4 +38,5 @@ resource "aws_backup_selection" "prod" {
     value = "local-default"
   }
 }
+
 */

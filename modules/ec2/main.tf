@@ -1,7 +1,7 @@
 resource "aws_instance" "ec2" {
   ami                                  = var.ami
   instance_type                        = var.instance_type
-  associate_public_ip_address          = "false"
+  associate_public_ip_address          = "true"
   availability_zone                    = var.availability_zone
   get_password_data                    = "false"
   instance_initiated_shutdown_behavior = "stop"
@@ -12,6 +12,7 @@ resource "aws_instance" "ec2" {
   subnet_id                            = var.subnet_id
   tenancy                              = "default"
   vpc_security_group_ids               = var.sg_ids
+  iam_instance_profile                 = var.iam_instance_profile
   tags                                 = var.ec2_tags
 
   #cpu_core_count = Sets the number of CPU cores for an instance
