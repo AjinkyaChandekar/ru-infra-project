@@ -34,5 +34,42 @@ List of snapshots to delete: snap-0a04e5efa4d00d405     snap-035be0a6cf3eafc41
 An error occurred (InvalidParameterValue) when calling the DeleteSnapshot operation: This snapshot is managed by the AWS Backup service and cannot be deleted via EC2 APIs. If you wish to delete this snapshot, please do so via the Backup console.
 
 admin@ADMIN-PC MINGW64 /h/terraform/RU-Prd/ru-infra-project (env/prd)
-$
+
+####################### AWS Tools for PowerShell ###################################
+Download AWS Tools for Windows  https://sdk-for-net.amazonwebservices.com/latest/AWSToolsAndSDKForNet.msi (Installs Windows powershell for AWS)
+
+AWS PowerShell Command Ref: https://aws.amazon.com/blogs/storage/delete-multiple-aws-backup-recovery-points-using-aws-tools-for-powershell/
+
+Get-ExecutionPolicy
+Set-ExecutionPolicy RemoteSigned
+
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default  -Region us-east-1 | Out-GridView
+
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default -Region us-east-1 -ByCreatedAfter $afterDate -ByCreatedBefore $beforeDate | select CreationDate, ResourceType, ResourceArn
+
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default  -Region us-east-1 | Select -ExpandProperty Lifecycle
+
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default -Region us-east-1 | Where Lifecycle -eq $null | Remove-BAKRecoveryPoint -Region us-east-1 -Force
+
+
+$BackupVaults = Get-BAKBackupVaultList -Region us-east-1
+
+Foreach($vault in $BackupVaults)
+{
+    Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName $vault.BackupVaultName 
+-Region us-east-1 | Where Lifecycle -eq $null | Remove-BAKRecoveryPoint -Region us-east-1 -Force 
+
+}
+
+
+
+$date = [DateTime]"02-OCT-2022"
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default -Region us-east-1 -ByCreatedAfter $date | Remove-BAKRecoveryPoint -Region us-east-1 -Force 
+
+$date = [DateTime]"02-OCT-2022"
+Get-BAKRecoveryPointsByBackupVaultList -BackupVaultName Default -Region us-east-1 -ByCreatedBefore (Get-Date).AddDays(-14) | Remove-BAKRecoveryPoint -Region us-east-1 -Force
+
+$beforeDate = [DateTime]"03-OCT-2022"
+$afterDate = [DateTime]"02-OCT-2022"
+ 
 
