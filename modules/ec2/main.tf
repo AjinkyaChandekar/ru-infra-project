@@ -18,6 +18,7 @@ resource "aws_instance" "ec2" {
   #cpu_core_count = Sets the number of CPU cores for an instance
   #cpu_threads_per_core = If set to to 1, hyperthreading is disabled on the launched instance. Defaults to 2 if not set.
   disable_api_termination = "false" #If true, enables EC2 Instance Termination Protection.
+  # disable_api_stop        = "false"
 
   #ebs_optimized = "false"
 

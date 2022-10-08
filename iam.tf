@@ -23,7 +23,7 @@ resource "aws_iam_role_policy_attachment" "backup" {
 }
 */
 
-/*
+
 resource "aws_iam_role" "backup2" {
   name = "backup_and_restore2"
   assume_role_policy = jsonencode({
@@ -48,7 +48,7 @@ resource "aws_iam_role" "backup2" {
 
 }
 
-
+/*
 resource "aws_iam_role" "restart_instance" {
   name = "SSM_EC2_StartStop_Role"
   assume_role_policy = jsonencode({

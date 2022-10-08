@@ -38,5 +38,4 @@ resource "aws_backup_selection" "prod" {
     value = "local-default"
   }
 }
-
 */
