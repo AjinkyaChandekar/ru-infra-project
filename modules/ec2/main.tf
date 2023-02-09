@@ -1,4 +1,4 @@
-resource "aws_instance" "ec2" {
+resource "aws_instance" "ureport-ec2-instance" {
   ami                                  = var.ami
   instance_type                        = var.instance_type
   associate_public_ip_address          = "true"
@@ -54,14 +54,12 @@ resource "aws_ebs_volume" "EBS_gp3" {
   availability_zone = var.availability_zone
   size              = each.value["ebssize"]
   type              = each.value["ebstype"]
-  snapshot_id       = var.availability_zone == "eu-west-1a" ? each.value["snapshot_id_a"] : each.value["snapshot_id_b"]
+  snapshot_id       = var.availability_zone == "us-east-1" ? each.value["snapshot_id_a"] : each.value["snapshot_id_b"]
   throughput        = each.value["throughput"]
   iops              = each.value["ebdiops"]
   encrypted         = true
   kms_key_id        = each.value["KMS"]
-  tags = merge(var.tags_ebs, {
-    "Name" = "${var.name}-${each.key}"
-  })
+  tags                                 = var.ec2_tags
 }
 
 resource "aws_ebs_volume" "EBS_io2" {
@@ -75,9 +73,7 @@ resource "aws_ebs_volume" "EBS_io2" {
   iops              = each.value["ebdiops"]
   encrypted         = true
   kms_key_id        = each.value["KMS"]
-  tags = merge(var.tags_ebs, {
-    "Name" = "${var.name}-${each.key}"
-  })
+  tags                                 = var.ec2_tags
 }
 
 resource "aws_volume_attachment" "EBS_att_gp3" {

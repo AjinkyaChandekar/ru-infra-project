@@ -9,3 +9,5 @@ variable "sg_ids" {}
 variable "rbd_size" {}
 variable "rbd_type" {}
 variable "iam_instance_profile" {}
+variable "awsconf_db_ebs_gp3" {}
+variable "awsconf_db_ebs_io2" {}
