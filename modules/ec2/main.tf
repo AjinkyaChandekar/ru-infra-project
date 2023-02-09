@@ -46,9 +46,11 @@ resource "aws_instance" "ec2" {
 
 }
 
-resource "aws_ebs_volume" "PPD_SQL" {
-  # checkov:skip=CKV2_AWS_9: Ensure that EBS are added in the backup plans of AWS Backup
-  for_each          = var.awsconf_db_ebs_new
+# EBS
+resource "aws_ebs_volume" "EBS_gp3" {
+  # checkov:skip=CKV2_AWS_9: ADD REASON
+  for_each = var.awsconf_db_ebs_gp3
+
   availability_zone = var.availability_zone
   size              = each.value["ebssize"]
   type              = each.value["ebstype"]
@@ -57,30 +59,15 @@ resource "aws_ebs_volume" "PPD_SQL" {
   iops              = each.value["ebdiops"]
   encrypted         = true
   kms_key_id        = each.value["KMS"]
-
-  tags = {
-    Name                 = each.key
-    AwsId                = var.awsid
-    Role                 = var.role
-    AppEnv               = var.appenv
-    AwsEnv               = var.appenv != "PPD" ? var.appenv : "PRE"
-    AppName              = var.appname
-    Hostname             = var.host_name
-    Project              = var.project
-    SupportContact       = var.SupportContact
-    TeamContact          = var.TeamContact
-    Terraform            = "true"
-    app-code             = var.app-code
-    data-confidentiality = var.data-classification
-    soft-instance-id     = var.soft-instance-id
-    map-migrated         = var.map-migrated
-    msp                  = var.msp
-  }
+  tags = merge(var.tags_ebs, {
+    "Name" = "${var.name}-${each.key}"
+  })
 }
 
-resource "aws_ebs_volume" "PPD_SQL_io2" {
-  # checkov:skip=CKV2_AWS_9: Ensure that EBS are added in the backup plans of AWS Backup
-  for_each          = var.awsconf_db_ebs_io2
+resource "aws_ebs_volume" "EBS_io2" {
+  # checkov:skip=CKV2_AWS_9: ADD REASON
+  for_each = var.awsconf_db_ebs_io2
+
   availability_zone = var.availability_zone
   size              = each.value["ebssize"]
   type              = each.value["ebstype"]
@@ -88,43 +75,31 @@ resource "aws_ebs_volume" "PPD_SQL_io2" {
   iops              = each.value["ebdiops"]
   encrypted         = true
   kms_key_id        = each.value["KMS"]
-
-  tags = {
-    Name                 = each.key
-    AwsId                = var.awsid
-    Role                 = var.role
-    AppEnv               = var.appenv
-    AwsEnv               = var.appenv != "PPD" ? var.appenv : "PRE"
-    AppName              = var.appname
-    Hostname             = var.host_name
-    Project              = var.project
-    SupportContact       = var.SupportContact
-    TeamContact          = var.TeamContact
-    Terraform            = "true"
-    app-code             = var.app-code
-    data-confidentiality = var.data-classification
-    soft-instance-id     = var.soft-instance-id
-    map-migrated         = var.map-migrated
-    msp                  = var.msp
-  }
+  tags = merge(var.tags_ebs, {
+    "Name" = "${var.name}-${each.key}"
+  })
 }
 
-resource "aws_volume_attachment" "PPD_SQL_att" {
-  for_each    = var.awsconf_db_ebs_new
+resource "aws_volume_attachment" "EBS_att_gp3" {
+  for_each = var.awsconf_db_ebs_gp3
+
   device_name = each.value["ebsname"]
-  volume_id   = aws_ebs_volume.PPD_SQL[each.key].id
+  volume_id   = aws_ebs_volume.EBS_gp3[each.key].id
   instance_id = aws_instance.ureport-ec2-instance.id
+
   depends_on = [
-    aws_ebs_volume.PPD_SQL
+    aws_ebs_volume.EBS_gp3
   ]
 }
 
-resource "aws_volume_attachment" "PPD_SQL_att_io2" {
-  for_each    = var.awsconf_db_ebs_io2
+resource "aws_volume_attachment" "EBS_att_io2" {
+  for_each = var.awsconf_db_ebs_io2
+
   device_name = each.value["ebsname"]
-  volume_id   = aws_ebs_volume.PPD_SQL_io2[each.key].id
+  volume_id   = aws_ebs_volume.EBS_io2[each.key].id
   instance_id = aws_instance.ureport-ec2-instance.id
+
   depends_on = [
-    aws_ebs_volume.PPD_SQL_io2
+    aws_ebs_volume.EBS_io2
   ]
 }
